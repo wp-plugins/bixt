@@ -100,7 +100,7 @@
         ver : '1.0',
 
         init : function (options) {
-            this.log(new Date());
+            Bixt.Util.log(new Date());
 
             this.options = {
                 user_id: 0,
@@ -118,12 +118,16 @@
 
             var local_this = this;
 
-            this.log('User Data URL: ' + Bixt.Util.getUserDataFile(this.options));
+            Bixt.Util.log('User Data URL: ' + Bixt.Util.getUserDataFile(this.options));
 
             this.loadScript(Bixt.Util.getUserDataFile(this.options), function () {
+                Bixt.Util.log('User data loaded.');
+                Bixt.Util.log(Bixt_data);
+
                 local_this.setData(Bixt_data);
 
                 if (local_this.options.auto_parse) {
+                    Bixt.Util.log('Auto parsing links.');
                     local_this.parse();
                 }
             });
@@ -135,16 +139,7 @@
             this.options.user_data = data;
         },
 
-        // log info. not used at the moment
-        log : function (data) {
-            // firebug ?
-            if ("console" in window) {
-                console.log(data);
-            }
-        },
-
         // Do not use doc.write in the loaded script ?!?
-
         loadScript : function (url, callback) {
             var script = document.createElement('script');
             script.type = 'text/javascript';
@@ -156,7 +151,7 @@
             } else if (document.getElementsByTagName('body')) {
                 document.getElementsByTagName('body')[0].appendChild(script);
             } else {
-                this.log('Bixt: HTML document is missing the HEAD or BODY tag. Cannot continue. What document is that ?');
+                Bixt.Util.log('Bixt: HTML document is missing the HEAD or BODY tag. Cannot continue. What document is that ?');
                 //alert('Bixt: HTML document is missing the HEAD or BODY tag. Cannot continue. What document is that ?');
             }
 
@@ -185,16 +180,16 @@
             var pos = param_obj.match.index;
             var buff = param_obj.buffer;
 
-            this.log(param_obj);
+            Bixt.Util.log(param_obj);
 
             while (pos) {
                // go left first: attrib/comment
                if (buff.charAt(pos) == '<'
                     || (buff.charAt(pos) == '-' && buff.charAt(pos-1) == '-' && buff.charAt(pos-2) == '!' && buff.charAt(pos-3) == '<')) {
-                   this.log('L:attrib/comment; word:' + param_obj.match.word);
+                   Bixt.Util.log('L:attrib/comment; word:' + param_obj.match.word);
                    return 0;
                } else if (buff.charAt(pos) == '>') {
-                   this.log('R:our of a tag; word:' + param_obj.match.word);
+                   Bixt.Util.log('R:our of a tag; word:' + param_obj.match.word);
                    return 1;
                }
 
@@ -288,7 +283,7 @@
                 if (node.nodeType == 3) {
                     if (parentNode && node.parentNode.className.indexOf('bixt_tooltip') == -1
                             && (parentNode == 'body' || parentNode == 'span' || parentNode == 'p' || parentNode == 'div')) {
-                        //this.log('term: ' + term + ' parentNode: ' + parentNode + "\n");
+                        //Bixt.Util.log('term: ' + term + ' parentNode: ' + parentNode + "\n");
 
                         var result;
                         var data = node.data;
@@ -625,10 +620,28 @@
             return temp.toLowerCase();
         },
 
+        // log info. not used at the moment
+        log : function (data) {
+            // firebug ?
+            if ("console" in window) {
+                if (typeof data == 'string') {
+                    data = 'Bixt: ' + data;
+                } else {
+                    console.log('Bixt:');
+                }
+
+                console.log(data);
+            }
+        },
+
         '' : ''
     };
 
     if (typeof bixt_cfg != 'undefined') {
+        Bixt.Util.log('bixt_cfg config found.');
+        Bixt.Util.log(bixt_cfg);
         new Bixt.Widgets.Words(bixt_cfg);
+    } else {
+        Bixt.Util.log('bixt_cfg config NOT found.');
     }
 })();
