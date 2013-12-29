@@ -348,10 +348,8 @@
                 });
             }
 
-            this.log(new Date());
-
             // just to play it safe
-            if (document.createElement) {
+            if ( document.createElement && (typeof bixt_cfg.branding == 'undefined' || bixt_cfg.branding) ) {
                 var divTag = document.createElement("div");
                 divTag.id = "Bixt_branding_booter";
                 divTag.setAttribute("align", "center");

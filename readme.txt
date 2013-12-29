@@ -17,7 +17,7 @@ JavaScript snippet into your page and you are done.
 
 All you need to do next is write articles and include talk about products and the selected keywords will be replaced with an affiliate link.
 
-You can manage keywords from one single central area: <a href="http://bixt.net" title="affiliate marketing tool, affiliates, skimwords" target="_blank">bixt.net</a>
+You can manage keywords from one single central area: <a href="http://bixt.net/?utm_source=bixt&utm_medium=plugin-readme&utm_campaign=product" title="affiliate marketing tool, affiliates, skimwords" target="_blank">bixt.net</a>
 
 = Benefits / Features =
 
@@ -48,8 +48,9 @@ Bixt.net service is free
 
 
 == Screenshots ==
-1. JavaScript code used on devcha.com (non-wordpress powered site)
-
+1. Plugin's Settings and help instructions
+2. Demo on a Static/Simple Page
+3. 
 
 == Upgrade Notice ==
 n/a

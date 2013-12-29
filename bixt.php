@@ -1,6 +1,6 @@
 <?php
 /*
-  Plugin Name: Bixt
+  Plugin Name: Bixt - Words into Affiliate Links
   Plugin URI: http://club.orbisius.com/products/wordpress-plugins/bixt/
   Description: Bixt replaces keywords or keyword phrases with affiliate links that you define per keyword.
   Version: 1.0.0
@@ -91,15 +91,18 @@ function bixt_insert_code() {
         $js_ssl_url = $js_url;
     }
 
+    $bixt_cfg_json = json_encode(array(
+        'user_id' =>  $user_id_esc,
+        'domain' =>  $dom_esc,
+        'env' =>  $env_esc,
+        'api_key' =>  $api_key,
+        'branding' => !empty($opts['branding']),
+    ));
+
     $code = <<<CODE_EOF
     <!-- Start of Bixt.net - Words2AffLinks Bixt Widget 2.0 (Async Load) -->
     <script type="text/javascript">//<![CDATA[
-        var bixt_cfg = {
-            user_id: '$user_id_esc',
-            domain : '$dom_esc',
-            env    : '$env_esc',
-            api_key: '$api_key'
-        };
+        var bixt_cfg = $bixt_cfg_json;
 
         (function() {
             function bixt_async_load() {
@@ -167,6 +170,7 @@ function bixt_validate_settings($input) { // whitelist options
 function bixt_get_options() {
     $defaults = array(
         'status' => 0,
+        'branding' => 1,
         'setup_time' => '',
         'user_id' => '',
         'domain' => '',
@@ -228,11 +232,7 @@ function bixt_settings_page() {
     <div class="wrap bixt_container">
 
         <div id="icon-options-general" class="icon32"></div>
-        <h2>Bixt</h2>
-
-        <div class="updated0"><p>
-             To use the plugin you need to set your User ID and domain. The information is available after you login at bixt.net
-        </p></div>
+        <h2>Bixt - Words into Affiliate Links</h2>
 
         <div id="poststuff">
 
@@ -242,6 +242,24 @@ function bixt_settings_page() {
                 <div id="post-body-content">
 
                     <div class="meta-box-sortables ui-sortable">
+
+                        <div class="postbox">
+
+                            <h3><span>Usage / Help</span></h3>
+                            <div class="inside">
+                                <ul>
+                                    <li>Create an account at <a href='http://bixt.net/?utm_source=bixt&utm_medium=plugin-settings&utm_campaign=product' target="_blank">Bixt.net</a></li>
+                                    <li>Create a list of keywords for a given domain</li>
+                                    <li>Enable the plugin, enter the User ID and the domain in the settings below.</li>
+                                    <li>Click on Save Changes.</li>
+                                    <li>Create a page/post which has keywords with defined affiliate links.</li>
+                                </ul>
+
+                                <iframe width="560" height="315" src="http://www.youtube.com/embed/Pc_rBrhoKbg" frameborder="0" allowfullscreen></iframe>
+
+                            </div> <!-- .inside -->
+
+                        </div> <!-- .postbox -->
 
                         <div class="postbox">
 
@@ -271,9 +289,10 @@ function bixt_settings_page() {
                                                     <input type="text" id="bixt_options_user_id" size='4'
                                                            name="bixt_options[user_id]"
                                                         value='<?php echo esc_attr($opts['user_id']); ?>' />
+                                                        Example: 123
                                                 </label>
                                                 <div>This is the ID that is shown after you login into
-                                                    <a href='http://bixt.net' target="_blank">bixt.net</a>.</div>
+                                                    <a href='http://bixt.net/?utm_source=bixt&utm_medium=plugin-settings&utm_campaign=product' target="_blank">Bixt.net</a>.</div>
                                             </td>
                                         </tr>
                                         <tr valign="top">
@@ -283,11 +302,27 @@ function bixt_settings_page() {
                                                     <input type="text" id="bixt_options_domain"
                                                            name="bixt_options[domain]"
                                                         value='<?php echo esc_attr($opts['domain']); ?>' />
+                                                    Example: orbisius.com
                                                 </label>
                                                 <div>
                                                     Each domain at bixt can have different keywords but you can also use one domain for all your sites.
-                                                    That way you can share the keywords as well.
+                                                    That way you can share the same keywords.
                                                 </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr valign="top">
+                                            <th scope="row">Show Branding in the footer (Affiliate Links Generated by Bixt.net)</th>
+                                            <td>
+                                                <label for="branding_radio1">
+                                                    <input type="radio" id="branding_radio1" name="bixt_options[branding]"
+                                                        value="1" <?php echo empty($opts['branding']) ? '' : 'checked="checked"'; ?> /> Enabled
+                                                </label>
+                                                <br/>
+                                                <label for="branding_radio2">
+                                                    <input type="radio" id="branding_radio2" name="bixt_options[branding]"
+                                                        value="0" <?php echo !empty($opts['branding']) ? '' : 'checked="checked"'; ?> /> Disabled
+                                                </label>
                                             </td>
                                         </tr>
                                     </table>
@@ -298,63 +333,6 @@ function bixt_settings_page() {
                                 </form>
                             </div> <!-- .inside -->
 
-                        </div> <!-- .postbox -->
-
-                        <div class="postbox">
-
-                            <h3><span>Usage / Help</span></h3>
-                            <div class="inside">
-
-                                <strong>Process</strong><br/>
-                                <ul>
-                                    <li>Create an account at Bixt.Net</li>
-                                    <li>Create a list of keywords for a given domain</li>
-                                    <li>Enter the User ID and the domain in the settings.</li>
-                                </ul>
-
-                                <iframe width="560" height="315" src="http://www.youtube.com/embed/Pc_rBrhoKbg" frameborder="0" allowfullscreen></iframe>
-
-                            </div> <!-- .inside -->
-
-                        </div> <!-- .postbox -->
-
-                        <div class="postbox">
-                            <?php
-                                $plugin_data = bixt_get_plugin_data();
-
-                                $app_link = urlencode($plugin_data['PluginURI']);
-                                $app_title = urlencode($plugin_data['Name']);
-                                $app_descr = urlencode($plugin_data['Description']);
-                                ?>
-                                <h3>Share</h3>
-                                <p>
-                                    <!-- AddThis Button BEGIN -->
-                                <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
-                                    <a class="addthis_button_facebook" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_twitter" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_google_plusone" g:plusone:count="false" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_linkedin" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_email" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_myspace" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_google" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_digg" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_delicious" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_stumbleupon" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_tumblr" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_favorites" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
-                                    <a class="addthis_button_compact"></a>
-                                </div>
-                                <!-- The JS code is in the footer -->
-
-                                <script type="text/javascript">
-                                    var addthis_config = {"data_track_clickback": true};
-                                    var addthis_share = {
-                                        templates: {twitter: 'Check out {{title}} #WordPress #plugin at {{lurl}} (via @orbisius)'}
-                                    }
-                                </script>
-                                <!-- AddThis Button START part2 -->
-                                <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=lordspace"></script>
-                                <!-- AddThis Button END part2 -->
                         </div> <!-- .postbox -->
                         
                     </div> <!-- .meta-box-sortables .ui-sortable -->
@@ -423,7 +401,7 @@ function bixt_settings_page() {
 
                                 <!-- Twitter: Tweet:js -->
                                 <a href="https://twitter.com/share" class="twitter-share-button"
-                                   data-lang="en" data-text="Checkout Like Gate Pro #WordPress #plugin.Increase your site & fb page's likes"
+                                   data-lang="en" data-text="Checkout Bixt #WordPress #plugin and make more money with affiliate commissions"
                                    data-count="none" data-via="orbisius" data-related="orbisius"
                                    data-url="http://club.orbisius.com/products/wordpress-plugins/bixt/">Tweet</a>
                                 <!-- /Twitter: Tweet:js -->
@@ -431,14 +409,15 @@ function bixt_settings_page() {
                                 <br/>
                                 <span>Support: <a href="http://club.orbisius.com/forums/forum/community-support-forum/wordpress-plugins/bixt/?utm_source=bixt&utm_medium=plugin-settings&utm_campaign=product"
                                     target="_blank" title="[new window]">Forums</a>
-
+                                    |
+                                    More <a href="http://club.orbisius.com/products/?utm_source=bixt&utm_medium=plugin-settings-support&utm_campaign=product"
+                                    target="_blank" title="[new window]">Products</a>
                                     <!--|
                                      <a href="http://docs.google.com/viewer?url=https%3A%2F%2Fdl.dropboxusercontent.com%2Fs%2Fwz83vm9841lz3o9%2FOrbisius_LikeGate_Documentation.pdf" target="_blank">Documentation</a>
                                     -->
                                 </span>
                             </div>
                         </div> <!-- .postbox -->
-
 
                         <div class="postbox"> <!-- quick-contact -->
                             <?php
@@ -533,6 +512,45 @@ function bixt_settings_page() {
                             </div> <!-- .inside -->
                          </div> <!-- .postbox --> <!-- /quick-contact -->
 
+                         <div class="postbox">
+                            <?php
+                                $plugin_data = bixt_get_plugin_data();
+
+                                $app_link = urlencode($plugin_data['PluginURI']);
+                                $app_title = urlencode($plugin_data['Name']);
+                                $app_descr = urlencode($plugin_data['Description']);
+                                ?>
+                                <h3>Share</h3>
+                                <p>
+                                    <!-- AddThis Button BEGIN -->
+                                <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+                                    <a class="addthis_button_facebook" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_twitter" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_google_plusone" g:plusone:count="false" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_linkedin" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_email" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_myspace" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_google" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_digg" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_delicious" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_stumbleupon" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_tumblr" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_favorites" addthis:url="<?php echo $app_link ?>" addthis:title="<?php echo $app_title ?>" addthis:description="<?php echo $app_descr ?>"></a>
+                                    <a class="addthis_button_compact"></a>
+                                </div>
+                                <!-- The JS code is in the footer -->
+
+                                <script type="text/javascript">
+                                    var addthis_config = {"data_track_clickback": true};
+                                    var addthis_share = {
+                                        templates: {twitter: 'Check out {{title}} #WordPress #plugin at {{lurl}} (via @orbisius)'}
+                                    }
+                                </script>
+                                <!-- AddThis Button START part2 -->
+                                <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=lordspace"></script>
+                                <!-- AddThis Button END part2 -->
+                        </div> <!-- .postbox -->
+
                     </div> <!-- .meta-box-sortables -->
 
                 </div> <!-- #postbox-container-1 .postbox-container -->
@@ -550,7 +568,7 @@ function bixt_settings_page() {
             Please do NOT use the WordPress forums or other places to seek support.
     </p></div>-->
 
-    <?php bixt_generate_ext_content(); ?>
+    <?php //bixt_generate_ext_content(); ?>
     <?php
 }
 
