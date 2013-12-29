@@ -1,4 +1,4 @@
-=== Bixt ===
+=== Bixt - Words into Affiliate Links ===
 Contributors: lordspace,orbisius
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7APYDVPBCSY9A
 Tags: affiliate,affiliate marketing,context link,links,affiliately,commission,commissions, affiliates, affiliate links, affiliate links generator, clickbank,click bank, amazon associates, amazon affiliate,shareasale,e-junkie
@@ -7,7 +7,7 @@ Tested up to: 3.8
 Stable tag: 1.0.0
 License: GPLv2 or later
 
-Bixt replaces a keywords or keyword phrases with affiliate links that you define per keyword.
+Bixt replaces keywords or keyword phrases with affiliate links that you define per keyword.
 
 == Description ==
 
