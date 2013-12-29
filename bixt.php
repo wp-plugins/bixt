@@ -3,7 +3,7 @@
   Plugin Name: Bixt - Words into Affiliate Links
   Plugin URI: http://club.orbisius.com/products/wordpress-plugins/bixt/
   Description: Bixt replaces keywords or keyword phrases with affiliate links that you define per keyword.
-  Version: 1.0.0
+  Version: 1.0.1
   Author: Svetoslav Marinov (Slavi)
   Author URI: http://orbisius.com
  */
