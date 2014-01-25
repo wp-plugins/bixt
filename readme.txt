@@ -3,8 +3,8 @@ Contributors: lordspace,orbisius
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7APYDVPBCSY9A
 Tags: affiliate,affiliate marketing,context link,links,affiliately,commission,commissions, affiliates, affiliate links, affiliate links generator, clickbank,click bank, amazon associates, amazon affiliate,shareasale,e-junkie
 Requires at least: 2.6
-Tested up to: 3.8
-Stable tag: 1.0.2
+Tested up to: 3.8.1
+Stable tag: 1.0.3
 License: GPLv2 or later
 
 Bixt replaces keywords or keyword phrases with affiliate links that you define per keyword.
@@ -56,6 +56,9 @@ Bixt.net service is free
 n/a
 
 == Changelog ==
+
+= 1.0.3 =
+* Tested with WP 3.8.1
 
 = 1.0.2 =
 * Code refactoring and added more JS logging.
